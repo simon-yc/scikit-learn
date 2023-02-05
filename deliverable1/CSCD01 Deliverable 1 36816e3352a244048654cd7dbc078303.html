@@ -1,0 +1,697 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>CSCD01: Deliverable 1</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="36816e33-52a2-4404-8654-cd7dbc078303" class="page sans"><header><h1 class="page-title">CSCD01: <strong>Deliverable 1</strong></h1></header><div class="page-body"><blockquote id="c8cb9322-739f-4b1b-b8ea-a8134d047706" class=""><strong>Course Project: Scikit-Learn</strong>
+A free machine learning library for the Python programming language that supports many classification, regression and clustering algorithms such as random forests, support-vector machines, gradient boosting, k-means and DBSCAN. It is designed to conveniently work together with Python libraries such as NumPy and SciPy.</blockquote><p id="ae9dbeb5-8b22-4a60-904b-cab7f643a3ca" class="">
+</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="b7085794-4b7b-426c-98e7-d2b3611abe43"><div style="font-size:1.5em"><img class="icon" src="https://www.notion.so/icons/groups_lightgray.svg"/></div><div style="width:100%"><strong>Team Introduction: Deez</strong></div></figure><hr id="7eb57a2c-0fc4-4db6-838a-86c9c7055625"/><div id="e62e1c9a-812d-4cb9-bb9b-c3300645a513" class="column-list"><div id="291fbda5-1f5d-4d77-aa54-d02a5f8175c4" style="width:50.000000000000014%" class="column"><figure id="0a349cae-3205-4e94-be63-136e9198b1f7" class="image" style="text-align:left"><a href="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image6.png"><img style="width:336px" src="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image6.png"/></a></figure><p id="b96d0640-fc2b-42d8-bd27-ce30d489dd6b" class="">
+</p><p id="94551ded-cadb-4cf7-b034-f7c7bfa84435" class=""><strong>Name: </strong>Brandon Lo
+<strong>ID:</strong> lobrand3, 1006302831
+<strong>Email: </strong>brandonholun.lo@mail.utoronto.ca</p></div><div id="81c739b4-7c75-4a50-8f65-30d09a788161" style="width:50%" class="column"><p id="2a0bb519-9ded-4cd6-b4d2-88bb7929d37c" class=""><strong>Description:</strong>
+As a computer science student at the University of Toronto, I have gained hands-on experience in software development through various internships and projects. I have worked as a software engineer at UofT Hatchery, where I implemented and integrated various features using technologies like Vue, PHP, WordPress, and Flask. At IBM, I contributed to the backend of their BI product Cognos Analytics using Java and NLP. At the Ontario Ministry of Education, I developed and maintained n-tier .NET applications for data collection for schools. I have also worked on two projects, AfriConnect and Rideshare API, utilizing the MERN stack and Java respectively. My technical skills include proficiency in Java, Python, JavaScript, and frameworks like React and Vue.</p></div></div><hr id="9a2348e4-8ea0-4b53-90c3-32e9d3abfa38"/><div id="8cb0fed0-c45d-4aec-9c62-4dacaa137e06" class="column-list"><div id="c652667d-012d-4a82-91eb-fc0e83b772f9" style="width:50.000000000000014%" class="column"><figure id="adc18e82-ccf4-4ec4-aa99-3866f4f1e2e2" class="image"><a href="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/01C16F90-B2D7-402E-A080-221A1B78F91F.jpeg"><img style="width:640px" src="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/01C16F90-B2D7-402E-A080-221A1B78F91F.jpeg"/></a></figure><p id="b919bb16-6db7-4022-9590-8b40494d094e" class=""><strong>Name: </strong>Tanzim Ahmed
+<strong>ID:</strong> ahmedmd3, 1005948389
+<strong>Email: </strong>tanzim.ahmed@mail.utoronto.ca</p></div><div id="b14fb5ae-0dd7-46fe-ab8b-60055fad69dc" style="width:50%" class="column"><p id="3a460138-4ef8-43be-86b6-21b3ddac5edd" class=""><strong>Description:</strong>
+I am a computer science student at the University of Toronto, set to graduate in April 2023. I have a cumulative GPA of 3.79 and have been recognized as a member of the Dean&#x27;s List of Academic Excellence. I have strong programming skills in JavaScript, HTML, CSS, Java, Scala, Python, C, SQL, and Shell. I have experience using frameworks and tools such as React, Node.js, MongoDB, and Docker. I have worked as a Junior Java Developer and a Back-end Software Developer. My projects include Paymates, an online platform for roommates; PawsUp, an e-commerce app for pet caretakers; The Web Gallery, a web application for sharing pictures and comments; and an E-Commerce Website.</p></div></div><hr id="67d6e110-fa13-4c0b-9b5d-e54254ad10b7"/><div id="bf7d022e-2c94-430a-8ed6-b30cd8e4ac11" class="column-list"><div id="506d5b6b-6040-4f54-ab7d-c9bda0448495" style="width:50.000000000000014%" class="column"><figure id="ac981e7a-481d-4342-898a-64a732192f4e" class="image"><a href="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image5.jpg"><img style="width:400px" src="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image5.jpg"/></a></figure><p id="b6ce27d5-6565-43c6-9027-d6ac279e2f42" class=""><strong>Name: </strong>Simon Chau
+<strong>ID:</strong> chausimo, 1006198348
+<strong>Email: </strong>simon.chau@mail.utoronto.ca</p></div><div id="4e460951-6c71-45c3-b2e7-ac9ab463521f" style="width:50%" class="column"><p id="7c95be1f-905b-4f90-9d92-690a477e978d" class=""><strong>Description:</strong>
+I am a computer science student at the University of Toronto with a specialization in Computer Science. I have a GPA of 3.75/4.0 and have taken courses: software design, algorithms, databases, software engineering, to name a few. I have interned as a back-end developer at IBM and a software developer at Codepxl. My technical skills include programming languages such as Python, Java, C, PHP, and JavaScript, as well as frameworks such as Laravel, React, and Vue.js. I am proficient in databases such as MySQL, MongoDB, and Neo4j, and have experience with tools such as Git, Gradle, Docker, and Kubernetes.</p></div></div><hr id="07947ba6-6ed6-47ca-9159-5d64018e8a6e"/><div id="5c09e216-7a15-4bee-be06-9ae9d2104e09" class="column-list"><div id="14543744-3afb-4022-9fb6-c2d048bf1a42" style="width:50.000000000000014%" class="column"><figure id="92e22359-881d-492c-814b-7d9c80ca448a" class="image"><a href="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image3.png"><img style="width:474px" src="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image3.png"/></a></figure><p id="a50a9f22-0b8f-494b-874e-919120f5b19a" class=""><strong>Name: </strong>Abhay Patel
+<strong>ID:</strong> pate1101, 1006315765
+<strong>Email: </strong>abhay.patel@mail.utoronto.ca</p></div><div id="570d7d00-cb63-4bfa-ac0d-568c566366d5" style="width:50%" class="column"><p id="d4553a5c-b833-4c6d-a13c-571e6db2c99a" class=""><strong>Description:</strong>
+I am a fourth year Computer Science student at the University of Toronto. I have industry experience as a software developer while working for General Motors where I resolved over 50 critical issues in multiple vehicle release lines, optimized API calls, and collaborated with stakeholders to meet certification standards set by Apple. As a digital technologies intern at Scholarly Elite, I decreased developer efforts by 60% by streamlining daily tasks and developed over 100+ auto-generated LaTeX documents using Python. I developed my technical skills through projects such as OAuth2.0 authorization, Python Stock Analysis scripts and a social media web application that incorporates Sentient Analysis. I am proficient in Python, Java, JavaScript, HTML/CSS, and experience with frameworks such as React, Flask, Node.js, and Vue.js.</p></div></div><hr id="b318cad3-b341-48bf-ad73-a02a58d15c85"/><div id="fa7d9931-802f-474f-a95c-010182fa371b" class="column-list"><div id="b8881d9c-1336-4894-b235-61485672773c" style="width:50%" class="column"><figure id="35be9f24-d305-49b3-b40a-05b30a3bfea6" class="image"><a href="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image4.jpg"><img style="width:1999px" src="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image4.jpg"/></a></figure><p id="495d1fcc-6dde-4e48-9ee3-b085c9b99b09" class="">
+</p><p id="1f36de05-bf32-4493-9427-df57906a2913" class=""><strong>Name: </strong>Meiyi Xie
+<strong>ID:</strong> xiemeiyi, 1007029886
+<strong>Email: </strong>flora.xie@mail.utoronto.ca</p></div><div id="8e7f1b92-0c95-450a-9f68-2ad892610660" style="width:50%" class="column"><p id="414c933e-5bba-42f5-a630-05d875b6322c" class=""><strong>Description:</strong>
+I am currently a third-year computer science student at UTSC. I have done a lot of projects both in school and work. I am excellent at verbal communication and received good feedback from my previous colleague. I am also a quick learner, so that I can learn new technologies quickly.  For my last co-op, I worked with Computer-Talk as a software developer. I used Angular, C# and Microsoft SQL to work with cross-functional teams to create and launch new exciting products. I am also a professional in Java, C and Python. I have also used both SQL and nonSQL databases. For the cloud base and frontend, I used GitHub, Azure, Docker, HTML, javascript, NodeJS, Flask and React.</p></div></div><hr id="db4d473d-03a5-451b-89eb-23957916e650"/><div id="595b4b5a-9117-4f21-a311-77d1cb8ac661" class="column-list"><div id="983f9c1e-ac36-4a82-916c-fb95089e1c08" style="width:50%" class="column"><figure id="3e8060fa-fdbc-4b6f-a354-daa3648d1fa0" class="image"><a href="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image1.jpg"><img style="width:1999px" src="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image1.jpg"/></a></figure><p id="eecfd9ec-1abd-45ad-999f-4f663a6e5578" class="">
+</p><p id="b4525f15-ab61-498b-8aec-8a6062b39469" class=""><strong>Name: </strong>Linda Shi
+<strong>ID:</strong> shizhon8, 1006967007
+<strong>Email: </strong>lindashi.shi@mail.utoronto.ca</p><p id="25209116-54e5-4a82-aa68-ceb264319070" class="">
+</p></div><div id="7c2b0919-1a8d-405d-9569-951c3c226010" style="width:50%" class="column"><p id="ebf9a515-3ba5-46bb-afa8-abf327fe11dc" class=""><strong>Description:</strong>
+I am currently a third-year computer science student at UTSC with cgpa 3.86. In my last co-op term, I worked in the company Nokia and worked as an application automation tester where I was responsible for designing, implementing, and maintaining automated tests. For my other co-op, I joined TD Bank group, working in a team responsible for the delivery of the Intranet Migration. Besides my co-op experiences, I was part of two software development teams in school where we built a job searching website and an application for a clinic. I have experience in programming languages such as Java, C, Python, Haskell, HTML and Flutter and am familiar with using tools such as Git, Docker, Jira, and Jenkins.</p></div></div><hr id="cb86e4f0-3ede-498b-a75c-5c6e365b059c"/><div id="9c934290-cd56-4b03-8892-811df9072689" class="column-list"><div id="096a25b2-6e82-4e6e-8e94-273d6392cdbc" style="width:50%" class="column"><figure id="57a49a0d-d9df-4c59-8aa1-0959eade3b38" class="image"><a href="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image2.jpg"><img style="width:860px" src="CSCD01%20Deliverable%201%2036816e3352a244048654cd7dbc078303/image2.jpg"/></a></figure><p id="d583b9f1-bbeb-434b-aba6-75a769d8c0fb" class=""><strong>Name: </strong>Tirth Patel
+<strong>ID:</strong> patelt26, 1005904103
+<strong>Email: </strong>tirthamit.patel@mail.utoronto.ca</p></div><div id="c7eafe96-f15d-4a73-9f8e-362a608e3b0d" style="width:50%" class="column"><p id="6cb9bd5d-5de6-496b-b342-f46fc8473193" class=""><strong>Description:</strong>
+I am a Computer Science student at the University of Toronto with a specialization in Information Systems. I gained valuable experience in software engineering through internships at Proctorio and Avenu where he developed various projects such as a web crawler program, a phone tree system, and a browser extension. I have also taught coding skills to students and have worked on projects such as OAuth 2.0 Implementation, VolunteerMe, and a Mock Shell Console Based Java Application. I have a strong skill set in multiple programming languages and frameworks including Python, Flask, NodeJS, Twilio, PostgreSQL, and Git.</p><p id="cb8a76c5-991d-4a28-92ca-a8a080a09df8" class="">
+</p></div></div><hr id="35702705-5f7a-4e37-8d0b-bbae984f5b90"/><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="932b315c-8dfc-44b1-82b0-d9baee8b5aed"><div style="font-size:1.5em"><img class="icon" src="https://www.notion.so/icons/document_lightgray.svg"/></div><div style="width:100%"><strong>Team Contract</strong></div></figure><hr id="7967a7df-8c3f-45f1-b3ca-dcf2309f5f83"/><p id="bec0961d-e0ba-401e-8691-35d704fd77d6" class=""><strong>Methods of Communication</strong></p><p id="652d4324-9240-4f27-83c3-6cac4de4c77b" class="">The primary method of communication is through our personal CSCD01 Discord server and the secondary method is through email.</p><ul id="d399c432-fde1-4aad-8005-4c13353142f0" class="bulleted-list"><li style="list-style-type:disc">Discord response time: within <strong>24 hours</strong></li></ul><ul id="e3a61915-fdb5-4afd-809f-fbfef3357538" class="bulleted-list"><li style="list-style-type:disc">Email response time: <strong>24 hours</strong></li></ul><hr id="c1a88af9-0534-4b70-8d25-e068d42bd3ac"/><p id="12c082a9-91f4-4954-ad07-2aadbe8b1075" class=""><strong>Meeting Attendance</strong></p><ul id="f04b4095-fd7c-43d4-b419-056fa3b6a3e8" class="bulleted-list"><li style="list-style-type:disc">Primary Tutorial: <strong>TUT0001</strong> (Thurs. 15:00 - 17:00)</li></ul><ul id="c82c8bee-f0cd-4111-ac31-6a9d8d470745" class="bulleted-list"><li style="list-style-type:disc">Required weekly meetings (Discord Server):<ul id="17e65432-e5f7-4d60-a3fb-2d0a1b3a3220" class="bulleted-list"><li style="list-style-type:circle"><strong>Saturday @ 18:00-18:30</strong></li></ul><ul id="c561e687-b4e6-4f51-ade6-60164bb02275" class="bulleted-list"><li style="list-style-type:circle"><strong>Wednesday @ 18:00-18:30</strong></li></ul></li></ul><ul id="fff0f26f-987e-4572-bf2b-aa0414232f9e" class="bulleted-list"><li style="list-style-type:disc">Meetings will take place through the CSCD01 Discord server in the General Voice channel</li></ul><ul id="bc331d5b-4c10-4e0a-9f90-6a2d9aada620" class="bulleted-list"><li style="list-style-type:disc">All standup meetings are mandatory unless otherwise mentioned in the Discord server</li></ul><ul id="ceb32a2a-44e6-4608-b96f-16d727f07a25" class="bulleted-list"><li style="list-style-type:disc">Additional meetings will be scheduled as necessary and after approval from all team members</li></ul><hr id="67a3f497-3a94-4b27-a528-f7a0d514d872"/><p id="601ba803-4add-4822-a204-ad56c85fb14f" class=""><strong>Meeting Preparation</strong></p><ul id="7199689f-298f-4323-a55f-3448b0527f91" class="bulleted-list"><li style="list-style-type:disc">All meetings will be done online and no in-person meetings will be scheduled</li></ul><ul id="3581d629-f699-4690-9a81-28bfebbf5e35" class="bulleted-list"><li style="list-style-type:disc">Each member will be given adequate time in round robin order to share their updates and statuses on their assigned tasks</li></ul><hr id="35b0c5fa-677c-4548-a23c-d4bda3609dac"/><p id="c832969f-03b6-4cce-a6c3-6dcae6bae5d6" class=""><strong>Division of work</strong></p><ul id="90fe0f11-294f-49ef-93e2-e1a2c0644f0e" class="bulleted-list"><li style="list-style-type:disc">All team members will receive a fair and balanced workload</li></ul><ul id="6551dfd3-2526-4562-a2dc-fc53f4646856" class="bulleted-list"><li style="list-style-type:disc">All tasks will follow the self-assignment methodology where users decide which tasks they wish to work on</li></ul><ul id="8b95afd4-b7a7-45ca-8eca-ef2054e34486" class="bulleted-list"><li style="list-style-type:disc">Tasks should be distributed fairly among users, so that each person contributes a similar amount of effort when possible. </li></ul><ul id="ffa45cb1-b5a6-4de2-b3c7-90bb18925c31" class="bulleted-list"><li style="list-style-type:disc">If no team member volunteers for a task, a meeting will occur and the task will be assigned to the most appropriate person.</li></ul><hr id="1c2229d2-9dd3-4f3d-821d-4d2ba9cc4ff8"/><p id="48e79036-7853-43f1-9dc7-5cbf875b3d33" class=""><strong>Submitting Assignments</strong></p><ul id="5526e436-113c-416f-9fcc-1fb9bbe7fb12" class="bulleted-list"><li style="list-style-type:disc">To ensure timely submissions to the main branch, a 24-hour code freeze will be implemented on the repository before significant deadlines</li></ul><ul id="4d93eae2-414f-40d0-a282-8257a50a9263" class="bulleted-list"><li style="list-style-type:disc">All contributions must be made 24 hours prior to the deadline</li></ul><ul id="f13e8b5a-6beb-4f2d-80a2-2b8d9b87ecd8" class="bulleted-list"><li style="list-style-type:disc">All pushes to the dev branch must be reviewed by a team member before being merged</li></ul><ul id="790e8498-f276-4051-8b4a-ffba27860556" class="bulleted-list"><li style="list-style-type:disc">It is the responsibility of each team member to ensure their submissions meet the standards and are pushed to the repository</li></ul><hr id="0cbf5d6e-363b-4122-bada-523d8ac4146f"/><p id="17b42c7e-0ddf-4449-b594-00d503c46599" class=""><strong>Contingency Planning</strong></p><ul id="8c048329-f0a0-4405-92b2-50436e86c5fe" class="bulleted-list"><li style="list-style-type:disc">If a team member drops out of the course their workload will be equally distributed among the remaining members</li></ul><ul id="4aacb709-8b9d-422c-9201-0b943f2cab6f" class="bulleted-list"><li style="list-style-type:disc">If a team member misses multiple meetings a one-to-one meeting will be held with the individual</li></ul><ul id="e8d59b5a-d4ae-4601-a733-983362606ac3" class="bulleted-list"><li style="list-style-type:disc">If the situation gets worse it will be raised to the attention of a T.A or the professor</li></ul><ul id="fa29b00e-12ca-46ca-962e-a820b155791f" class="bulleted-list"><li style="list-style-type:disc">If a team member is academically dishonest it will be immediately brought to the attention of the professor</li></ul><ul id="e56d903f-2a0f-45d5-a148-e07f1af52977" class="bulleted-list"><li style="list-style-type:disc">Any other situation will be assessed on a case by case basis</li></ul></div></article></body></html>

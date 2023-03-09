@@ -144,6 +144,7 @@ PARAM_VALIDATION_FUNCTION_LIST = [
     "sklearn.metrics.mean_absolute_percentage_error",
     "sklearn.metrics.mean_pinball_loss",
     "sklearn.metrics.mean_squared_error",
+    "sklearn.metrics.mean_squared_log_error",
     "sklearn.metrics.mean_tweedie_deviance",
     "sklearn.metrics.median_absolute_error",
     "sklearn.metrics.multilabel_confusion_matrix",

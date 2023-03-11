@@ -33,3 +33,16 @@ We have chosen solution number 3 from the above list. We chose it because this s
 
 Files Edited: <br>
 `scikit-learn-main\sklearn\ensemble\_forest.py`
+
+</br>
+
+###  **Create unit test**
+
+**Scenario #1: test_round_to_positive_int** round() returns positive integer
+
+**Scenario #2: test_round_to_zero_error** round() returns zero
+
+<br>
+
+Files Edited: <br>
+`scikit-learn-main\sklearn\ensemble\tests\test_forest.py`

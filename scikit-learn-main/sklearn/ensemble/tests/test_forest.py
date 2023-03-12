@@ -1807,3 +1807,23 @@ def test_read_only_buffer(monkeypatch):
 
     clf = RandomForestClassifier(n_jobs=2, random_state=rng)
     cross_val_score(clf, X, y, cv=2)
+
+def test_round_to_positive_int():
+    msg = "Unexpected value error"
+    
+    X, y = datasets.load_wine(return_X_y=True)
+
+    clf = RandomForestClassifier(max_samples=1e-2, class_weight='balanced_subsample')
+    
+    try:
+        clf.fit(X,y)
+    except ValueError:
+        pytest.fail(msg)
+
+def test_round_to_zero_error():
+    X, y = datasets.load_wine(return_X_y=True)
+
+    clf = RandomForestClassifier(max_samples=1e-8, class_weight='balanced_subsample')
+    
+    with pytest.raises(ValueError):
+        clf.fit(X,y)

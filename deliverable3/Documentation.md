@@ -195,9 +195,7 @@ def mean_squared_log_error(
 ):
 ... ...
 ```
-Added the function into the 
-
-PARAM_VALIDATION_FUNCTION_LIST for testing purpose:
+Added the function into the PARAM_VALIDATION_FUNCTION_LIST for testing purpose:
 ```python
 PARAM_VALIDATION_FUNCTION_LIST = [
     ...
@@ -221,7 +219,7 @@ In the issue documentation step 5, it mentions that under sklearn/tests/test_pub
 
     The expected output should be 0.199…, as all input parameters are valid. 
     
-1. if I try to call function mean_squared_log_error using the following parameter:
+2. As a user, if I try to call function mean_squared_log_error using the following parameter:
    + y_true = “INVALID INPUT”
    + y_pred = [2.5, 5, 4, 8]
    + sample_weight = None

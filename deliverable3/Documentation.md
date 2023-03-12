@@ -151,7 +151,7 @@ ValueError: insufficient samples for max_samples value 0.0001
         <a href="https://github.com/scikit-learn/scikit-learn/issues/24862">(#24862) Make automatic parameter validation for scikit-learn public function </a>
     </p>
     <p>Targeted PR: 
-        <a href="https://github.com/scikit-learn/scikit-learn/issues/24037">(#2) Fix: Throw Value Error when <code>max_samples</code> too small</a>
+        <a href="https://github.com/simon-yc/d01w23-team-deez/pull/4">(#4) Fix: Parameters validation for mean_squared_log_error</a>
     </p>
     <p>Team member involved: 
 

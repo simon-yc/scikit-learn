@@ -1713,7 +1713,13 @@ def ndcg_score(y_true, y_score, *, k=None, sample_weight=None, ignore_ties=False
     y_true = check_array(y_true, ensure_2d=False)
     y_score = check_array(y_score, ensure_2d=False)
     check_consistent_length(y_true, y_score, sample_weight)
+    y_shape = y_true.shape
 
+    if len(y_shape) == 2 and y_shape[1] == 1:
+        raise ValueError(
+            "Calculating the NDCG score with a single input is not meaningful."
+        )
+        
     if y_true.min() < 0:
         # TODO(1.4): Replace warning w/ ValueError
         warnings.warn(

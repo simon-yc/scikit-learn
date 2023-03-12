@@ -7,7 +7,7 @@
         <a href="https://github.com/scikit-learn/scikit-learn/issues/24037">(#24037) RandomForestClassifier <code>class_weight/max_samples</code> interaction can lead to ungraceful and nondescriptive failure</a>
     </p>
     <p>Targeted PR: 
-        <a href="https://github.com/scikit-learn/scikit-learn/issues/24037">(#2) Fix: Throw Value Error when <code>max_samples</code> too small</a>
+        <a href="https://github.com/simon-yc/d01w23-team-deez/pull/2">(#2) Fix: Throw Value Error when <code>max_samples</code> too small</a>
     </p>
 </blockquote>
 

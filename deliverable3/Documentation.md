@@ -54,7 +54,7 @@ ValueError: Only ('multilabel-indicator', 'continuous-multioutput', 'multiclass-
 ###  Development and Implementation Process
 
 #### Find cause of bug
-The root cause of this issue is inside the `ndcg_score() method`</a> in \_forest.py defined on line 1616. Inside this ndcg_score() method, the calls to `check_array` and `check_consistent_length` are successful and allows a single element as input. However, once we get to the method call `_check_dcg_target_type`, we obtain a `ValueError` telling us that the single element input is `binary`. This should not have been the case because technically a single element passed in as input should have passed this test case.
+The root cause of this issue is inside the `ndcg_score()` method</a> in `_forest.py` defined on line 1616. Inside this `ndcg_score()` method, the calls to `check_array` and `check_consistent_length` are successful and allows a single element as input. However, once we get to the method call `_check_dcg_target_type`, we obtain a `ValueError` telling us that the single element input is `binary`. This should not have been the case because technically a single element passed in as input should have passed this test case.
 
 #### Find possible fixes for bug
 We have two possible fixes for this issue:

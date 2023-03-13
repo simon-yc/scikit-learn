@@ -9,6 +9,11 @@
     <p>Targeted PR: 
         <a href=""> to do </a>
     </p>
+        <p>Team member involved: 
+
++ Brandon Lo (task implementation and testing)
++ Simon Chau (task implementation and testing)
+    </p>
 </blockquote>
 
 ### Files changed
@@ -54,7 +59,7 @@ ValueError: Only ('multilabel-indicator', 'continuous-multioutput', 'multiclass-
 ###  Development and Implementation Process
 
 #### Find cause of bug
-The root cause of this issue is inside the `ndcg_score()` method</a> in `_forest.py` defined on line 1616. Inside this `ndcg_score()` method, the calls to `check_array` and `check_consistent_length` are successful and allows a single element as input. However, once we get to the method call `_check_dcg_target_type`, we obtain a `ValueError` telling us that the single element input is `binary`. This should not have been the case because technically a single element passed in as input should have passed this test case.
+The root cause of this issue is inside the <a href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/metrics/_ranking.py#:~:text=def%20ndcg_score(y_true%2C%20y_score%2C%20*%2C%20k%3DNone%2C%20sample_weight%3DNone%2C%20ignore_ties%3DFalse)%3A"> `ndcg_score`</a> method</a> in `_ranking.py`. Inside this `ndcg_score` method, the calls to `check_array` and `check_consistent_length` are successful and allows a single element as input. However, once we get to the method call `_check_dcg_target_type`, we obtain a `ValueError` telling us that the single element input is `binary`. This should not have been the case because technically a single element passed in as input should have passed this test case.
 
 #### Find possible fixes for bug
 We have two possible fixes for this issue:
@@ -66,7 +71,7 @@ We have two possible fixes for this issue:
 #### Implementation of fix
 We have chosen solution 2 from the above list. We chose it because a single element passed into `ndcg_score` is not meaningful as discussed above. The `ndcg_score` is a trivial computation in this case. Thus, we believe that the best fix we should implement is to provide the user with a better feedback stating that passing in a single input into `ndcg_score` is not meaningful in any way.
 
-The added code checks the shape of the y_true input to the `ndcg_score` function in scikit learn's metrics module.
+The added code checks the shape of the y_true input to the `ndcg_score` function in scikit learn's metrics module. This specific method that was modified can be found inside the file <a href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/metrics/_ranking.py#:~:text=def%20ndcg_score(y_true%2C%20y_score%2C%20*%2C%20k%3DNone%2C%20sample_weight%3DNone%2C%20ignore_ties%3DFalse)%3A"> _ranking.py</a>.
 
 If y_true is a 2D array with only one column (i.e., a single input), the code raises a ValueError with the message: "Calculating the NDCG score with a single input is not meaningful."
 
@@ -83,6 +88,7 @@ if len(y_shape) == 2 and y_shape[1] == 1:
 ```
 
 ### Testing
+The following test cases were added inside the file <a href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/metrics/tests/test_ranking.py"> test_ranking.py</a>.
 
 #### Scenario \#1: `ndcg_score` is called with more than one input
 ```python

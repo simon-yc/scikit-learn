@@ -22,7 +22,7 @@
 </ul>
 
 ### Description
-The function <code>ndcg_score</code> only works correctly when the number of elements is greater than 1. If the number of elements is equal to 1, a Value Error is raised unexpectedly.
+The function `ndcg_score` only works correctly when the number of elements is greater than 1. If the number of elements is equal to 1, a Value Error is raised unexpectedly.
 <a href="https://github.com/scikit-learn/scikit-learn/issues/21335">(Source)
 </a>
 ```python
@@ -66,13 +66,13 @@ We have two possible fixes for this issue:
 #### Implementation of fix
 We have chosen solution 2 from the above list. We chose it because a single element passed into `ndcg_score` is not meaningful as discussed above. The `ndcg_score` is a trivial computation in this case. Thus, we believe that the best fix we should implement is to provide the user with a better feedback stating that passing in a single input into `ndcg_score` is not meaningful in any way.
 
-The added code checks the shape of the y_true input to the ndcg_score function in scikit learn's metrics module.
+The added code checks the shape of the y_true input to the `ndcg_score` function in scikit learn's metrics module.
 
 If y_true is a 2D array with only one column (i.e., a single input), the code raises a ValueError with the message: "Calculating the NDCG score with a single input is not meaningful."
 
 This is because the normalized discounted cumulative gain (NDCG) is a measure of ranking quality that requires multiple relevance scores for different items in a ranking. Therefore, calculating the NDCG score for a single item ranking does not make sense.
 
-The added code ensures that the input to the ndcg_score function meets the minimum requirements for meaningful NDCG score calculation, preventing potential errors or misleading results.
+The added code ensures that the input to the `ndcg_score` function meets the minimum requirements for meaningful NDCG score calculation, preventing potential errors or misleading results.
 ```python
     y_shape = y_true.shape
 

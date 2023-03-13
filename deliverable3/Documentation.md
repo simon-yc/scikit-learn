@@ -240,7 +240,7 @@ The 'y_true' parameter of mean_squared_log_error must be an array-like. Got ‘I
         <a href="https://github.com/scikit-learn/scikit-learn/issues/21335">(#21335) <code>ndcg_score</code> doesn't work with binary relevance and a list of 1 element </a>
     </p>
     <p>Targeted PR: 
-        <a href=""> to do </a>
+        <a href="https://github.com/simon-yc/d01w23-team-deez/pull/6">(#6) Fix: Throw correct Value Error when `ndcg_score` takes in a single input
     </p>
         <p>Team member involved: 
 
@@ -260,7 +260,7 @@ The 'y_true' parameter of mean_squared_log_error must be an array-like. Got ‘I
 </ul>
 
 ### Description
-The function `ndcg_score` only works correctly when the number of elements is greater than 1. If the number of elements is equal to 1, a `ValueError` is raised unexpectedly.
+The function `ndcg_score` only works correctly when the number of elements is greater than 1. If the number of elements is equal to 1, an incorrect `ValueError` is raised unexpectedly.
 <a href="https://github.com/scikit-learn/scikit-learn/issues/21335">(Source)
 </a>
 ```python
@@ -292,7 +292,7 @@ ValueError: Only ('multilabel-indicator', 'continuous-multioutput', 'multiclass-
 ###  Development and Implementation Process
 
 #### Find cause of bug
-The root cause of this issue is inside the <a href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/metrics/_ranking.py#:~:text=def%20ndcg_score(y_true%2C%20y_score%2C%20*%2C%20k%3DNone%2C%20sample_weight%3DNone%2C%20ignore_ties%3DFalse)%3A"> `ndcg_score`</a> method</a> in `_ranking.py`. Inside this `ndcg_score` method, the calls to `check_array` and `check_consistent_length` are successful and allows a single element as input. However, once we get to the method call `_check_dcg_target_type`, we obtain a `ValueError` telling us that the single element input is `binary`. This should not have been the case because technically a single element passed in as input should have passed this test case.
+The root cause of this issue is inside the <a href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/metrics/_ranking.py#:~:text=def%20ndcg_score(y_true%2C%20y_score%2C%20*%2C%20k%3DNone%2C%20sample_weight%3DNone%2C%20ignore_ties%3DFalse)%3A"> `ndcg_score`</a> method</a> in `_ranking.py`. Inside this `ndcg_score` method, the calls to `check_array` and `check_consistent_length` are successful and allows a single element as input. However, once we get to the method call `_check_dcg_target_type`, we obtain a `ValueError` telling us that the single element input is `binary`. This should not have been the case because a single element passed in as input into `ndcg_score` should have passed this test case.
 
 #### Find possible fixes for bug
 We have two possible fixes for this issue:

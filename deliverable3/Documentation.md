@@ -74,16 +74,46 @@ This is because the normalized discounted cumulative gain (NDCG) is a measure of
 
 The added code ensures that the input to the `ndcg_score` function meets the minimum requirements for meaningful NDCG score calculation, preventing potential errors or misleading results.
 ```python
-    y_shape = y_true.shape
+y_shape = y_true.shape
 
-    if len(y_shape) == 2 and y_shape[1] == 1:
-        raise ValueError(
-            "Calculating the NDCG score with a single input is not meaningful."
-        )
+if len(y_shape) == 2 and y_shape[1] == 1:
+    raise ValueError(
+        "Calculating the NDCG score with a single input is not meaningful."
+    )
 ```
 
 ### Testing
-to do
+
+#### Scenario \#1: `ndcg_score` is called with more than one input
+```python
+def test_ndcg_score_for_multiple_documents():
+    msg = "Unexpected value error"
+
+    t = [[1, 0]]
+    p = [[0, 1]]
+
+    try:
+        ndcg_score(t, p)
+    except ValueError:
+        pytest.fail(msg)
+```
+
+#### Scenario \#2: `ndcg_score` is called with only one input
+```python
+def test_ndcg_score_for_single_document_error():
+    error = "Calculating the NDCG score with a single input is not meaningful."
+
+    t = [[1]]
+    p = [[0]]
+
+    with pytest.raises(ValueError, match=error):
+        ndcg_score(t, p)
+```
 
 ### Customer Acceptance Test
-to do
+Previously running the code snippet described in `Description`, we ran into `ValueError: Only ('multilabel-indicator', 'continuous-multioutput', 'multiclass-multioutput') formats are supported. Got binary instead` when a single input was passed into `ndcg_score`. However, this is unexpected behaviour because the error message does not describe the issue being presented correctly.
+
+After proposing the fix described in `Implementation of fix`, we obtain another `ValueError` which describes clearly that the issue is because an input of a single value is meaningless when running `ndcg_score`. Thus, we now get the following after the fix:
+```python
+ValueError: Calculating the NDCG score with a single input is not meaningful.
+```

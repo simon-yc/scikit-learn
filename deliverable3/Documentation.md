@@ -27,7 +27,7 @@
 </ul>
 
 ### Description
-The function `ndcg_score` only works correctly when the number of elements is greater than 1. If the number of elements is equal to 1, a Value Error is raised unexpectedly.
+The function `ndcg_score` only works correctly when the number of elements is greater than 1. If the number of elements is equal to 1, a `ValueError` is raised unexpectedly.
 <a href="https://github.com/scikit-learn/scikit-learn/issues/21335">(Source)
 </a>
 ```python

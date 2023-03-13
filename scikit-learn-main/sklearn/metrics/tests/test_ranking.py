@@ -1859,6 +1859,28 @@ def _test_ndcg_score_for(y_true, y_score):
     assert score.shape == (y_true.shape[0],)
 
 
+def test_ndcg_score_for_single_document_error():
+    error = "Calculating the NDCG score with a single input is not meaningful."
+
+    t = [[1]]
+    p = [[0]]
+
+    with pytest.raises(ValueError, match=error):
+        ndcg_score(t, p)
+
+  
+def test_ndcg_score_for_multiple_documents():
+    msg = "Unexpected value error"
+
+    t = [[1, 0]]
+    p = [[0, 1]]
+
+    try:
+        ndcg_score(t, p)
+    except ValueError:
+        pytest.fail(msg)
+
+
 def test_partial_roc_auc_score():
     # Check `roc_auc_score` for max_fpr != `None`
     y_true = np.array([0, 0, 1, 1])

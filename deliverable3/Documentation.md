@@ -9,6 +9,12 @@
     <p>Targeted PR: 
         <a href="https://github.com/simon-yc/d01w23-team-deez/pull/2">(#2) Fix: Throw Value Error when <code>max_samples</code> too small</a>
     </p>
+        <p>Team member involved: 
+
++ Abhay Patel (finding cause of bug and testing)
++ Tanzim Ahmed (finding fixes for bug and testing)
++ Tirth Patel (task implementation)
+    </p>
 </blockquote>
 
 ### Files changed
@@ -106,7 +112,7 @@ if isinstance(max_samples, Real):
 
 ### Testing
 
-#### Scenario #1: max_samples parameter is set to a value that is not too small
+#### Scenario #1: ```max_samples``` parameter is set to a value that is not too small
 
 ```python
 def test_round_to_positive_int():
@@ -122,7 +128,7 @@ def test_round_to_positive_int():
         pytest.fail(msg)
 ```
 
-#### Scenario #2: max_samples parameter is set to a value that is too small
+#### Scenario #2: ```max_samples``` parameter is set to a value that is too small
 
 ```python
 def test_round_to_zero_error():
@@ -143,6 +149,7 @@ After proposing the fix described in ```Implementation of fix```, we no longer g
 ```python
 ValueError: insufficient samples for max_samples value 0.0001
 ```
+<br></br>
 
 ## Issue #24862
 
@@ -233,6 +240,8 @@ sklearn.utils._param_validation.InvalidParameterError:
 The 'y_true' parameter of mean_squared_log_error must be an array-like. Got ‘INVALID INPUT’ instead.
 ```
 
+<br></br>
+
 ## Issue #21335
 
 <blockquote>
@@ -240,7 +249,7 @@ The 'y_true' parameter of mean_squared_log_error must be an array-like. Got ‘I
         <a href="https://github.com/scikit-learn/scikit-learn/issues/21335">(#21335) <code>ndcg_score</code> doesn't work with binary relevance and a list of 1 element </a>
     </p>
     <p>Targeted PR: 
-        <a href="https://github.com/simon-yc/d01w23-team-deez/pull/6">(#6) Fix: Throw correct Value Error when `ndcg_score` takes in a single input
+        <a href="https://github.com/simon-yc/d01w23-team-deez/pull/6">(#6) Fix: Throw correct Value Error when `ndcg_score` takes in a single input</a>
     </p>
         <p>Team member involved: 
 

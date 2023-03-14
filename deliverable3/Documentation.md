@@ -52,7 +52,7 @@ ValueError: insufficient samples for max_samples value 0.0001
 ```python
 IndexError: arrays used as indices must be of integer (or boolean) type
 ```
-### Development and Implementation Process
+### Implementation Process
 
 ####  Find cause of bug
 
@@ -298,7 +298,7 @@ Traceback (most recent call last):
 ValueError: Only ('multilabel-indicator', 'continuous-multioutput', 'multiclass-multioutput') formats are supported. Got binary instead
 ```
 
-###  Development and Implementation Process
+###  Implementation Process
 
 #### Find cause of bug
 The root cause of this issue is inside the <a href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/metrics/_ranking.py#:~:text=def%20ndcg_score(y_true%2C%20y_score%2C%20*%2C%20k%3DNone%2C%20sample_weight%3DNone%2C%20ignore_ties%3DFalse)%3A"> `ndcg_score`</a> method</a> in `_ranking.py`. Inside this `ndcg_score` method, the calls to `check_array` and `check_consistent_length` are successful and allows a single element as input. However, once we get to the method call `_check_dcg_target_type`, we obtain a `ValueError` telling us that the single element input is `binary`. This should not have been the case because a single element passed in as input into `ndcg_score` should have passed this test case.

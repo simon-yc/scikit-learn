@@ -1,6 +1,7 @@
 import warnings
 
 import re
+import scipy.sparse as sp
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
@@ -1442,3 +1443,25 @@ def test_unknown_category_that_are_negative():
     X_test_nan = np.asarray([[1, np.nan], [3, np.nan]])
 
     assert_allclose(hist.predict(X_test_neg), hist.predict(X_test_nan))
+
+def test_gradient_boosting_with_sparse_matrix():
+    # Create a numpy array with new sample data
+    data = np.array([5, 2, 1, np.nan, 4]).reshape(-1, 1)
+    
+    # Convert the numpy array to a Compressed Sparse Row (CSR) matrix
+    sparse_sample = sp.csr_matrix(data)
+    
+    # Define new target values for the sample data
+    target_values = [3, 1, 4, 5, 2]
+    
+    # Instantiate a HistGradientBoostingClassifier with a minimum samples per leaf of 1
+    classifier = HistGradientBoostingClassifier(min_samples_leaf=1)
+    
+    # Train the classifier using the sparse sample data and target values
+    classifier.fit(sparse_sample, target_values)
+    
+    # Predict the target values using the trained classifier
+    predictions = classifier.predict(sparse_sample)
+    
+    # Assert that the predictions match the original target values
+    assert np.array_equal(predictions, target_values), f"Expected {target_values}, but got {predictions}"

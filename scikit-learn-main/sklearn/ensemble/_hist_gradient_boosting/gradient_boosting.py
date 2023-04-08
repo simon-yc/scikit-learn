@@ -8,6 +8,7 @@ from numbers import Real, Integral
 import warnings
 
 import numpy as np
+import scipy.sparse as sp
 from timeit import default_timer as time
 from ..._loss.loss import (
     _LOSSES,
@@ -33,7 +34,7 @@ from ...metrics import check_scoring
 from ...model_selection import train_test_split
 from ...preprocessing import LabelEncoder
 from ._gradient_boosting import _update_raw_predictions
-from .common import Y_DTYPE, X_DTYPE, G_H_DTYPE
+from .common import Y_DTYPE, X_DTYPE, X_BINNED_DTYPE, G_H_DTYPE
 
 from .binning import _BinMapper
 from .grower import TreeGrower
@@ -363,7 +364,9 @@ class BaseHistGradientBoosting(BaseEstimator, ABC):
         acc_compute_hist_time = 0.0  # time spent computing histograms
         # time spent predicting X for gradient and hessians update
         acc_prediction_time = 0.0
-        X, y = self._validate_data(X, y, dtype=[X_DTYPE], force_all_finite=False)
+        X, y = self._validate_data(
+            X, y, dtype=[X_DTYPE], force_all_finite=False, accept_sparse=True
+        )
         y = self._encode_y(y)
         check_consistent_length(X, y)
         # Do not create unit sample weights by default to later skip some
@@ -476,7 +479,15 @@ class BaseHistGradientBoosting(BaseEstimator, ABC):
             random_state=self._random_seed,
             n_threads=n_threads,
         )
-        X_binned_train = self._bin_data(X_train, is_training_data=True)
+        
+        if sp.issparse(X_train):
+            X_train = X_train.toarray()
+
+        if X_train is not None:
+            X_binned_train = self._bin_data(X_train, is_training_data=True)
+        else:
+            X_binned_train = None
+
         if X_val is not None:
             X_binned_val = self._bin_data(X_val, is_training_data=False)
         else:
@@ -1023,9 +1034,10 @@ class BaseHistGradientBoosting(BaseEstimator, ABC):
             The raw predicted values.
         """
         is_binned = getattr(self, "_in_fit", False)
+        dtype = X_BINNED_DTYPE if is_binned else X_DTYPE
         if not is_binned:
             X = self._validate_data(
-                X, dtype=X_DTYPE, force_all_finite=False, reset=False
+                X, dtype=dtype, force_all_finite=False, reset=False, accept_sparse=True
             )
         check_is_fitted(self)
         if X.shape[1] != self._n_features:

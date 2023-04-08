@@ -199,8 +199,6 @@ Before, I was only able to use datasets that contain only binary values or only 
 
 <br></br>
 
-# Documentation of Implemented Issues
-
 ## Issue #15336
 
 <blockquote>

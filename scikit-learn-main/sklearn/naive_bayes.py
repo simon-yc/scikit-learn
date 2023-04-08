@@ -1530,3 +1530,169 @@ class CategoricalNB(_BaseDiscreteNB):
             jll += self.feature_log_prob_[i][:, indices].T
         total_ll = jll + self.class_log_prior_
         return total_ll
+
+class MixedNB:
+    """A Naive Bayes classifier for mixed datasets with both binary and continuous features.
+
+    This classifier combines Bernoulli Naive Bayes (for binary features) and Gaussian Naive Bayes
+    (for continuous features) to handle mixed datasets. The final prediction is an average
+    of the predictions from both classifiers.
+
+    Parameters
+    ----------
+    None
+
+    Attributes
+    ----------
+    bernoulli : BernoulliNB
+        The Bernoulli Naive Bayes classifier for binary features.
+
+    gaussian : GaussianNB
+        The Gaussian Naive Bayes classifier for continuous features.
+
+    bin_cols : list
+        The indices of binary columns in the dataset.
+
+    cont_cols : list
+        The indices of continuous columns in the dataset.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> X = np.array([[0, 1, 1.2, 2.3],
+    ...               [1, 0, 3.4, 4.5],
+    ...               [0, 1, 5.6, 6.7]])
+    >>> y = np.array([0, 1, 0])
+    >>> bin_cols = [0, 1]
+    >>> cont_cols = [2, 3]
+    >>> from mixed_naive_bayes import MixedNB
+    >>> clf = MixedNB()
+    >>> clf.fit(X, y, bin_cols, cont_cols)
+    >>> print(clf.predict(X))
+    [False, True, False]
+    """
+
+    def __init__(self):
+        self.bernoulli = BernoulliNB()
+        self.gaussian = GaussianNB()
+        self.bin_cols = None
+        self.cont_cols = None
+
+    def get_bin_cols(self, X, bin_cols):
+        return X[:, bin_cols]
+
+    def get_cont_cols(self, X, cont_cols):
+        return X[:, cont_cols]
+
+    def check_binary(self, X, bin_cols):
+        bin_X = self.get_bin_cols(X, bin_cols)
+        for row in bin_X:
+            for element in row:
+                if element not in [0, 1]:
+                    raise ValueError("Binary variables contain non-binary values.")
+
+    def check_continuous(self, X, cont_cols):
+        cont_X = self.get_bin_cols(X, cont_cols)
+        for row in cont_X:
+            for element in row:
+                try:
+                    float(element)
+                except:
+                    raise ValueError("Continuous variables contain non-continuous values.")
+
+    def validate_output(self, X, y):
+        if (len(X) != len(y)):
+            raise ValueError("The number of inputs must be equal to the number of outputs.")
+
+        if any([val != 0 and val != 1 for val in y]):
+            raise ValueError("Binary variables contain non-binary values in the real y-values.")
+
+    def validate_input(self, X, bin_cols, cont_cols):
+        if np.array(X).ndim != 2 or len(X[0]) < 2:
+            raise ValueError("X must be a 2D array with at least one row and least 2 columns, where each element is a list of equal length.")
+
+        if len(bin_cols) + len(cont_cols) > len(X[0]):
+            raise ValueError("There are not enough columns in the dataset as specified by bin_cols and cont_cols.")
+
+        if not all(0 <= i < len(X[0]) for i in bin_cols):
+            raise ValueError("Binary column index provided is out of bounds.")
+
+        if not all(0 <= i < len(X[0]) for i in cont_cols):
+            raise ValueError("Continuous column index provided is out of bounds.")
+
+        if len(set(bin_cols)) != len(bin_cols):
+            raise ValueError("Binary column indices must be unique.")
+
+        if len(set(cont_cols)) != len(cont_cols):
+            raise ValueError("Continuous column indices must be unique.")
+
+        if set(bin_cols).intersection(set(cont_cols)):
+            raise ValueError("Binary and continuous columns must not overlap.")
+
+        self.check_binary(X, bin_cols)
+        self.check_continuous(X, cont_cols)
+
+    def validate_cols(self, bin_cols, cont_cols):
+        if not isinstance(bin_cols, list) or not isinstance(cont_cols, list):
+            raise ValueError("Binary columns and continuous columns must be defined as lists.")
+
+        if len(bin_cols) < 1 or len(cont_cols) < 1:
+            raise ValueError("You must specify at least one column for binary and at least one column for continuous.")
+
+        if len(bin_cols) != len(cont_cols):
+            raise ValueError("Binary column list and continuous column list are not same size.")
+
+    def validate(self, X, bin_cols, cont_cols):
+        self.validate_cols(bin_cols, cont_cols)
+        self.validate_input(X, bin_cols, cont_cols)
+
+    def set_input(self, bin_cols, cont_cols):
+        self.bin_cols = bin_cols
+        self.cont_cols = cont_cols
+
+    def find_bin_cont_cols(self, X):
+        if np.array(X).ndim != 2 or len(X[0]) < 2:
+            raise ValueError("X must be a 2D array with at least one row and least 2 columns, where each element is a list of equal length.")
+
+        bin_cols = [i for i in range(len(X[0])) if all(row[i] in [0,1] for row in X)]
+        cont_cols = [i for i in range(len(X[0])) if i not in bin_cols]
+
+        return bin_cols, cont_cols
+
+    def fit(self, X, y, bin_cols=None, cont_cols=None):
+        if (bin_cols is None) != (cont_cols is None):
+            raise ValueError("Either both bin_cols and cont_cols must be specified or none at all.")
+
+        if bin_cols is None and cont_cols is None:
+            bin_cols, cont_cols = self.find_bin_cont_cols(X)
+
+        self.validate(X, bin_cols, cont_cols)
+        self.validate_output(X, y)
+
+        bin_X = self.get_bin_cols(X, bin_cols)
+        cont_X = self.get_cont_cols(X, cont_cols)
+
+        self.bernoulli.fit(bin_X, y)
+        self.gaussian.fit(cont_X, y)
+        
+        self.set_input(bin_cols, cont_cols)
+
+    def predict(self, X):
+        if self.bin_cols is None or self.cont_cols is None:
+            raise ValueError("There is no dataset or invalid columns are given.")
+
+        self.validate(X, self.bin_cols, self.cont_cols)
+
+        bin_X = self.get_bin_cols(X, self.bin_cols)
+        cont_X = self.get_cont_cols(X, self.cont_cols)
+
+        preds = []
+
+        bin_preds = self.bernoulli.predict(bin_X)
+        preds.append(bin_preds)
+
+        cont_preds = self.gaussian.predict(cont_X)
+        preds.append(cont_preds)
+
+        preds_avg = np.mean(preds, axis=0)
+        return np.greater_equal(preds_avg, 0.5)

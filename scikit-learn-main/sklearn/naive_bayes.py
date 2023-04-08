@@ -1602,7 +1602,7 @@ class MixedNB:
 
     def validate_output(self, X, y):
         if (len(X) != len(y)):
-            raise ValueError("The number of inputs must be equal to the number of outputs.")
+            raise ValueError("The number of inputs must be equal to the number of outputs.") 
 
         if any([val != 0 and val != 1 for val in y]):
             raise ValueError("Binary variables contain non-binary values in the real y-values.")
@@ -1620,15 +1620,6 @@ class MixedNB:
         if not all(0 <= i < len(X[0]) for i in cont_cols):
             raise ValueError("Continuous column index provided is out of bounds.")
 
-        if len(set(bin_cols)) != len(bin_cols):
-            raise ValueError("Binary column indices must be unique.")
-
-        if len(set(cont_cols)) != len(cont_cols):
-            raise ValueError("Continuous column indices must be unique.")
-
-        if set(bin_cols).intersection(set(cont_cols)):
-            raise ValueError("Binary and continuous columns must not overlap.")
-
         self.check_binary(X, bin_cols)
         self.check_continuous(X, cont_cols)
 
@@ -1641,6 +1632,15 @@ class MixedNB:
 
         if len(bin_cols) != len(cont_cols):
             raise ValueError("Binary column list and continuous column list are not same size.")
+        
+        if len(set(bin_cols)) != len(bin_cols):
+            raise ValueError("Binary column indices must be unique.")
+
+        if len(set(cont_cols)) != len(cont_cols):
+            raise ValueError("Continuous column indices must be unique.")
+
+        if set(bin_cols).intersection(set(cont_cols)):
+            raise ValueError("Binary and continuous columns must not overlap.")
 
     def validate(self, X, bin_cols, cont_cols):
         self.validate_cols(bin_cols, cont_cols)

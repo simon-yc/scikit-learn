@@ -7,7 +7,7 @@ import warnings
 
 from scipy.special import logsumexp
 
-from sklearn.datasets import load_digits, load_iris
+from sklearn.datasets import load_digits, load_iris, make_classification
 
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
@@ -17,9 +17,12 @@ from sklearn.utils._testing import assert_array_equal
 from sklearn.utils._testing import assert_array_almost_equal
 from sklearn.utils._testing import assert_allclose
 
-from sklearn.naive_bayes import GaussianNB, BernoulliNB
+from sklearn.naive_bayes import GaussianNB, BernoulliNB, MixedNB
 from sklearn.naive_bayes import MultinomialNB, ComplementNB
 from sklearn.naive_bayes import CategoricalNB
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
 DISCRETE_NAIVE_BAYES_CLASSES = [BernoulliNB, CategoricalNB, ComplementNB, MultinomialNB]
 ALL_NAIVE_BAYES_CLASSES = DISCRETE_NAIVE_BAYES_CLASSES + [GaussianNB]
@@ -189,7 +192,6 @@ def test_gnb_check_update_with_no_data():
     tmean, tvar = GaussianNB._update_mean_variance(prev_points, mean, var, x_empty)
     assert tmean == mean
     assert tvar == var
-
 
 def test_gnb_partial_fit():
     clf = GaussianNB().fit(X, y)
@@ -972,3 +974,170 @@ def test_predict_joint_proba(Estimator):
     log_prob_x = logsumexp(jll, axis=1)
     log_prob_x_y = jll - np.atleast_2d(log_prob_x).T
     assert_allclose(est.predict_log_proba(X2), log_prob_x_y)
+ 
+def test_validate_cols_error():
+    mixed_nb = MixedNB()
+    error = "Binary columns and continuous columns must be defined as lists."
+    # Test if ValueError is raised when binary column is None and continuous column is a list.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_cols(None, [0])
+
+    # Test if ValueError is raised when binary column is a list and continuous column is None.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_cols([0], None)
+
+def test_validate_input_error():
+    mixed_nb = MixedNB()
+    X = np.array([[0, 1.5], [1, 2.5], [0, 3.5]])
+    error = "Binary column index provided is out of bounds."
+    # Test if ValueError is raised when binary column index is out of bounds.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_input(X, [3], [1])
+
+    error = "Continuous column index provided is out of bounds."
+    # Test if ValueError is raised when continuous column index is out of bounds.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_input(X, [0], [3])
+
+def test_check_binary_error():
+    mixed_nb = MixedNB()
+    X = np.array([[0, 1.5], [1, 2.5], [0, 3.5]])
+    error = "Binary variables contain non-binary values."
+    # Test if ValueError is raised when binary variables contain non-binary values.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.check_binary(X, [1])
+
+def test_validate_output_error():
+    mixed_nb = MixedNB()
+    X = np.array([[0, 1.5], [1, 2.5], [0, 3.5]])
+    y = np.array([0, 1, 2])
+    error = "Binary variables contain non-binary values in the real y-values."
+    # Test if ValueError is raised when y-values contain non-binary values.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_output(X, y)
+
+def test_find_bin_cont_cols_error():
+    mixed_nb = MixedNB()
+    X = [[0]]
+    error = "X must be a 2D array with at least one row and least 2 columns, where each element is a list of equal length."
+    # Test if ValueError is raised when X is not a 2D array with at least one row and least 2 columns.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.find_bin_cont_cols(X)
+
+def test_fit_error():
+    mixed_nb = MixedNB()
+    X = np.array([[0, 1.5], [1, 2.5], [0, 3.5]])
+    y = np.array([0, 1, 0])
+    error = "Either both bin_cols and cont_cols must be specified or none at all."
+    # Test if ValueError is raised when only binary column is specified during fit.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.fit(X, y, bin_cols=[0], cont_cols=None)
+
+    # Test if ValueError is raised when only continuous column is specified during fit.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.fit(X, y, bin_cols=None, cont_cols=[1])
+
+def test_predict_error():
+    mixed_nb = MixedNB()
+    X = np.array([[0, 0, 1, 1],
+                  [1, 0, 2, 2],
+                  [0, 1, 3, 1],
+                  [1, 1, 4, 0]])
+
+    error = "There is no dataset or invalid columns are given."
+    # Test if ValueError is raised when predicting without fitting a dataset.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.predict(X)
+    
+def test_check_continuous_error():
+    mixed_nb = MixedNB()
+    X = np.array([[0, 1.5], [1, 'string']])
+    error = "Continuous variables contain non-continuous values."
+    # Test if ValueError is raised when continuous variables contain non-continuous values.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.check_continuous(X, [1])
+
+def test_validate_output_inputs_not_equal():
+    mixed_nb = MixedNB()
+    X = np.array([[0, 1.5], [1, 2.5], [0, 3.5]])
+    y = np.array([0, 1])
+    error = "The number of inputs must be equal to the number of outputs."
+    # Test if ValueError is raised when the number of inputs is not equal to the number of outputs.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_output(X, y)
+
+def test_validate_input_not_enough_columns_error():
+    mixed_nb = MixedNB()
+    X = np.array([[0, 1.5, 2.5], [1, 2.5, 3.5], [0, 3.5, 4.5]])
+    bin_cols = [0, 1]
+    cont_cols = [2, 3]
+    error = "There are not enough columns in the dataset as specified by bin_cols and cont_cols."
+    # Test if ValueError is raised when there are not enough columns in the dataset.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_input(X, bin_cols, cont_cols)
+
+def test_validate_cols_bin_not_unique_error():
+    mixed_nb = MixedNB()
+    bin_cols = [0, 0]
+    cont_cols = [1, 2]
+    error = "Binary column indices must be unique."
+    # Test if ValueError is raised when binary column indices are not unique.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_cols(bin_cols, cont_cols)
+
+def test_validate_cols_cont_not_unique_error():
+    mixed_nb = MixedNB()
+    bin_cols = [0, 1]
+    cont_cols = [2, 2]
+    error = "Continuous column indices must be unique."
+    # Test if ValueError is raised when continuous column indices are not unique.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_cols(bin_cols, cont_cols)
+
+def test_validate_cols_overlap_error():
+    mixed_nb = MixedNB()
+    bin_cols = [0, 1]
+    cont_cols = [1, 2]
+    error = "Binary and continuous columns must not overlap."
+    # Test if ValueError is raised when binary and continuous columns overlap.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_cols(bin_cols, cont_cols)
+
+def test_validate_cols_specify_columns_error():
+    mixed_nb = MixedNB()
+    bin_cols = []
+    cont_cols = []
+    error = "You must specify at least one column for binary and at least one column for continuous."
+    # Test if ValueError is raised when no binary or continuous columns are specified.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_cols(bin_cols, cont_cols)
+
+def test_validate_cols_different_sizes_error():
+    mixed_nb = MixedNB()
+    bin_cols = [0]
+    cont_cols = [1, 2]
+    error = "Binary column list and continuous column list are not same size."
+    # Test if ValueError is raised when binary and continuous column lists are not the same size.
+    with pytest.raises(ValueError, match=error):
+        mixed_nb.validate_cols(bin_cols, cont_cols)
+
+def test_predict_normal_case():
+    mixed_nb = MixedNB()
+    X_train = np.array([[0, 0, 1, 1],
+                        [1, 0, 2, 2],
+                        [0, 1, 3, 1],
+                        [1, 1, 4, 0]])
+    y_train = np.array([0, 1, 1, 0])
+    X_test = np.array([[1, 0, 2, 1],
+                       [0, 1, 3, 0]])
+    
+    mixed_nb.fit(X_train, y_train)
+    predictions = mixed_nb.predict(X_test)
+
+    # Check if the predictions array is a numpy array
+    assert isinstance(predictions, np.ndarray)
+    # Check if the predictions array has the correct shape (2,)
+    # [-, -] -> 2 elements in the first dimension, second dimension does not exist
+    assert predictions.shape == (2, )
+    # Check if all predicted labels are either 0 or 1
+    assert all(pred in [0, 1] for pred in predictions)

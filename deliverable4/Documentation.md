@@ -31,7 +31,7 @@
 
 ### Description and Design of the Implementation:
 
-![UML diagram](uml.png)
+![UML diagram](images/uml.png)
 
 We introduced a new Naive Bayes classifier in the scikit-learn library, `MixedNB`, which is designed to handle mixed datasets including both binary and continuous features. Our implementation addresses the limitations of scikit-learn's existing Naive Bayes classifiers, more specifically `BernoulliNB` and `GaussianNB`, which are specialized for either binary or continuous features but not both. Using this new class, we are able to provide a prediction given a mixed dataset that includes both binary and continuous values.
 
@@ -291,7 +291,7 @@ TypeError: A sparse matrix was passed, but dense data is required. Use X.toarray
 ```
 ### Implementation
 
-![Alt text](./Design.svg)
+![Alt text](./images/Design.svg)
 
 The above diagram shows the changes that we have made for our implementation highlighted in blue. The main changes are in the ```fit``` and ```transform``` methods of the ```BinMapper``` class. The fit method is used to train the algorithm on a certain training data after the model is intialized. The transform method is used to process and change the data, or 'transform' it, for the model to use.
 

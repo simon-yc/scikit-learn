@@ -293,15 +293,19 @@ TypeError: A sparse matrix was passed, but dense data is required. Use X.toarray
 
 ![Alt text](./Design.svg)
 
-The above diagram shows the changes that we have made for our implementation highlighted in blue. The main changes are in the <code>fit</code> and <code>transform</code> methods of the <code>BinMapper</code> class. The <code>fit</code> method is used to fit the sparse matrix into the bins. The <code>transform</code> method is used to transform the sparse matrix into a dense matrix.
+The above diagram shows the changes that we have made for our implementation highlighted in blue. The main changes are in the ```fit``` and ```transform``` methods of the ```BinMapper``` class. The fit method is used to train the algorithm on a certain training data after the model is intialized. The transform method is used to process and change the data, or 'transform' it, for the model to use.
 
 #### <code>Fit</code> Method
 
-When adjusting the sparse matrix after calling the fit() method, it can be changed to a dense one since only unique values matter. This is done by taking the non-empty values and adding 0 to the list of values. Now, the matrix can be handled like a dense one. This helps to prevent copying the code and testing a new method.
+In this method, sparse matrices are not supported by default so we modified this function in order to allow for sparse matrices when checking the inputed data. This can be done because we can change the sparse data to a dense one later on during the process since only unique values matter. This can be done by only considering the non-empty values and adding 0 to the list of values so that the matrix can be handled like a dense one. This helps to prevent copying the code and testing a new method.
 
 #### <code>Transform</code> Method
 
-The main issue here is that we want the bin with the value 0 to be set to the value 0. This way, we can use the sparse structure to treat missing values as 0.
+Previously, inputting sparse matrices would lead to an error when checking the inputted data for certain constraints. We modified the check_array parameters in order to allow sparse matrices, and handled the sparse data scenario and the dense data scenario seperately.
+
+The case for dense data is the same as before, however handling sparse data is a bit different and more complex.
+
+The main issue when handling sparse data is that we want the bin with the value 0 to be set to the value 0. This way, we can use the sparse structure to treat missing values as 0.
 
 In the resulting matrix, values in the bins from 0 to just before actual_bin_zero are moved one space to the right, and the bin actual_bin_zero is set to 0.
 

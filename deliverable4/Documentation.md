@@ -196,3 +196,217 @@ print("Accuracy:", accuracy)
 ```
 
 Before, I was only able to use datasets that contain only binary values or only continuous values with the Bernoulli and Gaussian classifiers respectively. Now, I am finally able to pass in a dataset that contains both binary and continuous values and use a combination of the two classifiers successfully with the MixedNB class without getting any errors.
+
+<br></br>
+
+## Issue #15336
+
+<blockquote>
+    <p>Issue Link: 
+        <a href="https://github.com/scikit-learn/scikit-learn/issues/15336">(#15336) Add Sparse Matrix Support For <code>HistGradientBoostingClassifier</code>
+    </p>
+    <p>Targeted PR: 
+        <a href="https://github.com/simon-yc/d01w23-team-deez/pull/9">(#9) Add complete support for <code>sparse matrix</code></a>
+    </p>
+        <p>Team member involved: 
+
++ Abhay Patel (finding cause of issue and testing)
++ Tanzim Ahmed (testing and task implementation)
++ Tirth Patel (task implementation)
+    </p>
+</blockquote>
+
+### Files changed
+<ul>
+    <li>
+        <a href="#"><code>scikit-learn-main/sklearn/ensemble/_hist_gradient_boosting/binning.py</code></a>
+    </li>
+    <li>
+        <a href="#"><code>scikit-learn-main/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py</code></a>
+    </li>
+    <li>
+        <a href="#"><code>scikit-learn-main/sklearn/ensemble/_hist_gradient_boosting/predictor.py</code></a>
+    </li>
+    <li>
+        <a href="#"><code>scikit-learn-main/sklearn/ensemble/_hist_gradient_boosting/tests/test_binning.py</code></a>
+    </li>
+    <li>
+        <a href="#"><code>scikit-learn-main/sklearn/ensemble/_hist_gradient_boosting/tests/test_gradient_boosting.py</code></a>
+    </li>
+</ul>
+
+### Description
+
+Gradient boosting classifiers are a kind of machine learning method that joins many weak learning models to make a strong prediction model. Decision trees are often used for this. When these trees are weak learners, or models that work a little better than guessing, they usually do better than random forest models.
+
+Boosting is a way to learn with a group of tree models that are added one by one. Each new tree model tries to fix the mistakes made by the other tree models already in the group.
+
+By breaking down the input data into a few hundred special values using bins, we can make the tree training much faster.
+
+We can also use helpful data structures, like histograms, to show the bins of the input data. The tree building method can be made better to use histograms when making each tree.
+
+Histogram-based gradient boosting ensembles use this way to change the training around the input data. This method helps train decision trees faster in the gradient boosting ensemble. That's why, in new machine learning libraries, a gradient boosting method that uses "histograms" is often called histogram-based gradient boosting.
+
+The problem in this issue happens when we try to use a sparse matrix in the HistGradientBoostingClassifier. This matrix is made by using CountVectorizer and TfidTransformer on some input text. CountVectorizer is used to transform text into a sparse matrix and the TfidTransformer is meant to convert a collection of documents/data into a matrix of TF-IDF features. The purpose of TfidTransformer is to scale down the impact of tokens that occur very frequently in the matrix which essentially acts as a dense matrix, however it can return a sparse matrix. The default behaviour when returning a sparse matrix is to throw a TypeError, which is explained more later on.
+
+This improvement for the HistGradientBoostingClassifier tries to make it possible to use sparse matrices as input without raising an error.
+
+### Steps to Reproduce
+
+```python
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.ensemble import HistGradientBoostingClassifier
+
+df = pd.read_csv("path_to_sparse_matrix_data.csv")
+
+vectorizer = CountVectorizer()
+tfidf = TfidfTransformer()
+clf = HistGradientBoostingClassifier()
+
+vecs = vectorizer.fit_transform(df.loc[:, "very_large_text"])
+vecs = tfidf.fit_transform(vecs)
+
+clf.fit(vecs, df.loc[:, "label"])
+
+```
+
+<code>csv</code> file used for testing:
+```csv
+id,very_large_text,label
+0,this is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing data,3
+1,this is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing data,2
+2,this is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing data,5
+3,this is testing datthis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing dataa,4
+```
+
+#### Exprected Result
+```python
+No error is thrown
+```
+
+#### Actual Result
+```python
+TypeError: A sparse matrix was passed, but dense data is required. Use X.toarray() to convert to a dense numpy array.
+```
+### Implementation
+
+![Alt text](./Design.svg)
+
+The above diagram shows the changes that we have made for our implementation highlighted in blue. The main changes are in the ```fit``` and ```transform``` methods of the ```BinMapper``` class. The fit method is used to train the algorithm on a certain training data after the model is intialized. The transform method is used to process and change the data, or 'transform' it, for the model to use.
+
+#### <code>Fit</code> Method
+
+In this method, sparse matrices are not supported by default so we modified this function in order to allow for sparse matrices when checking the inputed data. This can be done because we can change the sparse data to a dense one later on during the process since only unique values matter. This can be done by only considering the non-empty values and adding 0 to the list of values so that the matrix can be handled like a dense one. This helps to prevent copying the code and testing a new method.
+
+#### <code>Transform</code> Method
+
+Previously, inputting sparse matrices would lead to an error when checking the inputted data for certain constraints. We modified the check_array parameters in order to allow sparse matrices, and handled the sparse data scenario and the dense data scenario seperately.
+
+The case for dense data is the same as before, however handling sparse data is a bit different and more complex.
+
+The main issue when handling sparse data is that we want the bin with the value 0 to be set to the value 0. This way, we can use the sparse structure to treat missing values as 0.
+
+In the resulting matrix, values in the bins from 0 to just before actual_bin_zero are moved one space to the right, and the bin actual_bin_zero is set to 0.
+
+The transform function gives back actual_bin_zero along with the matrix.
+
+So, the whole process for the transform method can be explained like this:
+
+1. We give a 1x1 matrix filled with zeros to _map_to_bins to find the actual_bin_zero.
+2. We change the sparse matrix to a dense one (explained more below).
+3. We give the packed matrix to _map_to_bins to change the bins.
+4. We move the changed bins.
+5. We change the dense matrix back to a sparse one, keeping the original structure.
+
+#### The Packing Process 
+To let _map_to_bins work with a sparse matrix, we change it to a dense one. We do this for each column, and the new matrix is the smallest size that can hold the data. The function gives back the packed matrix and the row numbers of the earlier values.
+
+To unpack the matrix, we do the opposite - we use the row numbers to put the values in the right place in the sparse matrix.
+
+These changes have been added to the _find_binning_thresholds method in binning.py, along with a few small changes in gradient_boosting.py and predictor.py.
+
+Since this isn't a new feature, it doesn't change the overall structure of scikit-learn or how it's designed. Instead, it makes the Histogram-Based Gradient Boosting better by showing correct results for sparse matrices when using the method that supports it - HistGradientBoostingClassifier.
+
+### User Guide
+
+<a href="https://scikit-learn.org/stable/modules/ensemble.html#histogram-based-gradient-boosting"> Guide for Histogram-Based Gradient Boosting from the official scikit-learn documentation </a>
+
+The issue we picked doesn't impact the user guide because it's not a new feature. Most of the changes are in the ```_find_binning_thresholds method```, along with two new private helper methods, ```convert_to_dense_matrix``` and ```convert_to_sparse_matrix```. Because these methods are private, they don't change the overall structure of the library. Also, the updated classes in this improvement don't use these helpers as methods; instead, they call these helpers within the existing class methods.
+
+### Testing
+
+We need to test the changes in two main situations. First, we test ```gradient_boosting``` with a sparse matrix input, and second, we test the changes made to the ```_find_binning_thresholds```
+
+#### Scenario #1: ```gradient_boosting ```
+
+```python
+def test_gradient_boosting_with_sparse_matrix():
+    # Create a numpy array with new sample data
+    data = np.array([5, 2, 1, np.nan, 4]).reshape(-1, 1)
+    # Convert the numpy array to a Compressed Sparse Row (CSR) matrix
+    sparse_sample = sp.csr_matrix(data)
+    # Define new target values for the sample data
+    target_values = [3, 1, 4, 5, 2]
+    # Instantiate a HistGradientBoostingClassifier with a minimum samples per leaf of 1
+    classifier = HistGradientBoostingClassifier(min_samples_leaf=1)
+    # Train the classifier using the sparse sample data and target values
+    classifier.fit(sparse_sample, target_values)
+    # Predict the target values using the trained classifier
+    predictions = classifier.predict(sparse_sample)
+    # Assert that the predictions match the original target values
+    assert np.array_equal(predictions, target_values), f"Expected {target_values}, but got {predictions}"
+```
+
+#### Scenario #2: ```_find_binning_thresholds```
+
+```python
+def test_sparse_matrix_find_binning():
+    # creates an evenly spaced array with 5 values ranging from 0 to 15
+    linspace_array = np.linspace(0, 12, 9)
+    y_axis = [x for x in range(9)]
+    x_axis = [0 for _ in range(9)]
+    # pairs each corresponding row and column with each of the values in data
+    linspace_array = sp.csr_matrix((linspace_array, (y_axis, x_axis)), (10, 1))
+    # map the data into bins
+    get_bin = _find_binning_thresholds(linspace_array, max_bins=5)
+    assert(get_bin, [0.75, 3.75, 6.75, 9.75])
+```
+
+### Customer Acceptance Test
+
+Use the same code piece mentioned in the ```Steps to Reproduce``` section.
+
+```python
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.ensemble import HistGradientBoostingClassifier
+
+df = pd.read_csv("path_to_sparse_matrix_data.csv")
+
+vectorizer = CountVectorizer()
+tfidf = TfidfTransformer()
+clf = HistGradientBoostingClassifier()
+
+vecs = vectorizer.fit_transform(df.loc[:, "very_large_text"])
+vecs = tfidf.fit_transform(vecs)
+
+clf.fit(vecs, df.loc[:, "label"])
+
+```
+
+<code>csv</code> file used for testing:
+```csv
+id,very_large_text,label
+0,this is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing data,3
+1,this is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing data,2
+2,this is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing data,5
+3,this is testing datthis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing datathis is testing dataa,4
+```
+
+Instead of seeing a TypeError now, the user doesn't get any output, which is what we expect.
+
+```shell
+tanzim@DESKTOP-F5EEQ36:/mnt/c/Users/Tanzim Ahmed/d01w23-team-deez2$ python3 test.py
+tanzim@DESKTOP-F5EEQ36:/mnt/c/Users/Tanzim Ahmed/d01w23-team-deez2$ 
+```
